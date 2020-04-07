@@ -41,7 +41,7 @@ def parse_args(script):
     else:
        raise ValueError('Unknown script')
 
-    return parser.parse_known_args('--model ResNet10 --dataset CUB'.split())[0]
+    return parser.parse_known_args('--model Conv4 --dataset CUB'.split())[0]
     # return parser.parse_known_args()[0]
 
 

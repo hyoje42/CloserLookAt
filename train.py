@@ -46,7 +46,7 @@ def train(base_loader, val_loader, model, optimization, start_epoch, stop_epoch,
 if __name__=='__main__':
     np.random.seed(10)
     params = parse_args('train')
-
+    print(params)
 
     if params.dataset == 'cross':
         base_file = configs.data_dir['miniImagenet'] + 'all.json' 
