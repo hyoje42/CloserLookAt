@@ -41,8 +41,9 @@ def parse_args(script):
     else:
        raise ValueError('Unknown script')
 
-    return parser.parse_known_args('--model Conv4 --dataset CUB'.split())[0]
-    # return parser.parse_known_args()[0]
+    # return parser.parse_known_args('--model Conv4 --dataset CUB --method baseline++'.split())[0]
+    # return parser.parse_known_args('--model Conv4 --dataset miniImagenet --method protonet'.split())[0]
+    return parser.parse_known_args()[0]
 
 
 def get_assigned_file(checkpoint_dir,num):
