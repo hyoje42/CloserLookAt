@@ -6,3 +6,6 @@ checkpoints/
 filelists/
 features/
 *.ipynb
+*.json
+Datasets
+.vscode/
