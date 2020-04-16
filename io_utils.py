@@ -42,7 +42,7 @@ def parse_args(script):
        raise ValueError('Unknown script')
 
     # return parser.parse_known_args('--model Conv4 --dataset CUB --method baseline++'.split())[0]
-    # return parser.parse_known_args('--model Conv4 --dataset miniImagenet --method protonet'.split())[0]
+    # return parser.parse_known_args('--model ResNet34 --dataset miniImagenet --method baseline++'.split())[0]
     return parser.parse_known_args()[0]
 
 
