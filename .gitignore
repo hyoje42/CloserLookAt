@@ -3,9 +3,12 @@ __pycache__/*
 *.pyc
 Datasets/
 checkpoints/
+checkpoint
 filelists/
 features/
 *.ipynb
 *.json
 Datasets
-.vscode/
+.vscode
+.vscode/*
+*.*.pyc
