@@ -23,7 +23,8 @@ def parse_args(script):
     parser.add_argument('--test_n_way'  , default=5, type=int,  help='class num to classify for testing (validation) ') #baseline and baseline++ only use this parameter in finetuning
     parser.add_argument('--n_shot'      , default=5, type=int,  help='number of labeled data in each class, same as n_support') #baseline and baseline++ only use this parameter in finetuning
     parser.add_argument('--train_aug'   , action='store_true',  help='perform data augmentation or not during training ') #still required for save_features.py and test.py to find the model path correctly
-
+    # additional
+    parser.add_argument('--gpu'         , default=0, type=int,  help='gpu number')
     if script == 'train':
         parser.add_argument('--num_classes' , default=200, type=int, help='total number of classes in softmax, only used in baseline') #make it larger than the maximum label value in base class
         parser.add_argument('--save_freq'   , default=50, type=int, help='Save frequency')
@@ -42,7 +43,7 @@ def parse_args(script):
        raise ValueError('Unknown script')
 
     # return parser.parse_known_args('--model Conv4 --dataset CUB --method baseline++'.split())[0]
-    # return parser.parse_known_args('--model ResNet34 --dataset miniImagenet --method baseline++'.split())[0]
+    # return parser.parse_known_args('--model Conv4 --dataset miniImagenet --method baseline++'.split())[0]
     return parser.parse_known_args()[0]
 
 

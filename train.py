@@ -12,9 +12,12 @@ from methods.protonet import ProtoNet
 from methods.matchingnet import MatchingNet
 from methods.relationnet import RelationNet
 from methods.maml import MAML
-from io_utils import model_dict, parse_args, get_resume_file  
+from io_utils import model_dict, parse_args, get_resume_file
 
-os.environ['CUDA_VISIBLE_DEIVICES'] = '1'
+from datetime import datetime
+
+params = parse_args('train')
+os.environ['CUDA_VISIBLE_DEIVICES'] = f'{params.gpu}'
 
 def train(base_loader, val_loader, model, optimization, start_epoch, stop_epoch, params):    
     if optimization == 'Adam':
@@ -23,16 +26,18 @@ def train(base_loader, val_loader, model, optimization, start_epoch, stop_epoch,
        raise ValueError('Unknown optimization, please define by yourself')
 
     max_acc = 0       
-
     for epoch in range(start_epoch,stop_epoch):
         model.train()
-        model.train_loop(epoch, base_loader,  optimizer ) #model are called by reference, no need to return 
+        avg_loss = model.train_loop(epoch, base_loader,  optimizer ) #model are called by reference, no need to return 
         model.eval()
-
-        if not os.path.isdir(params.checkpoint_dir):
-            os.makedirs(params.checkpoint_dir)
-
-        acc = model.test_loop( val_loader)
+        
+        with torch.no_grad():
+            acc = model.test_loop( val_loader)
+        with open(params.logfile, 'a') as f:
+            if acc > 0:
+                print(f'{avg_loss:.4f}\t{acc:.2f}', file=f)
+            else:
+                print(f'{avg_loss:.4f}', file=f)
         if acc > max_acc : #for baseline and baseline++, we don't use validation here so we let acc = -1
             print("best model! save...")
             max_acc = acc
@@ -48,7 +53,6 @@ def train(base_loader, val_loader, model, optimization, start_epoch, stop_epoch,
 if __name__=='__main__':
     np.random.seed(10)
     params = parse_args('train')
-    print(params)
 
     if params.dataset == 'cross':
         base_file = configs.data_dir['miniImagenet'] + 'all.json' 
@@ -190,5 +194,14 @@ if __name__=='__main__':
             model.feature.load_state_dict(state)
         else:
             raise ValueError('No warm_up file')
-
+    # log file
+    filename = os.path.join(params.checkpoint_dir, 'log.txt')
+    params.logfile = filename
+    with open(params.logfile, 'w') as f:
+        for key in params.__dict__.keys():
+            print(f'{key} : {params.__dict__[key]}', file=f)
+        print(f'Start time : {datetime.now():%Y-%m-%d} {datetime.now():%H:%M:%S}', file=f)
+    print(params)
     model = train(base_loader, val_loader,  model, optimization, start_epoch, stop_epoch, params)
+    with open(params.logfile, 'a') as f:
+        print(f'End time : {datetime.now():%Y-%m-%d} {datetime.now():%H:%M:%S}', file=f)
